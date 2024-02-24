@@ -34,7 +34,14 @@ public class Gmail extends Email {
     public void deleteMail(String message){
         // Each message is distinct
         // If the given message is found in any mail in the inbox, move the mail to trash, else do nothing
-        inbox.removeIf(mail -> mail.getMessage().equals(message));
+        //inbox.removeIf(mail -> mail.getMessage().equals(message));
+        for (int i = 0; i < inbox.size(); i++) {
+            Mail mail = inbox.get(i);
+            if (mail.getMessage().equals(message)) {
+                trash.add(inbox.remove(i));
+                i--; // Adjust the index after removal
+            }
+        }
     }
 
     public String findLatestMessage(){
@@ -58,9 +65,16 @@ public class Gmail extends Email {
     public int findMailsBetweenDates(Date start, Date end){
         //find number of mails in the inbox which are received between given dates
         //It is guaranteed that start date <= end date
+//        int count = 0;
+//        for (Mail mail : inbox) {
+//            if (mail.getDate().after(start) && mail.getDate().before(end)) {
+//                count++;
+//            }
+//        }
+//        return count;
         int count = 0;
         for (Mail mail : inbox) {
-            if (mail.getDate().after(start) && mail.getDate().before(end)) {
+            if (mail.getDate().compareTo(start) >= 0 && mail.getDate().compareTo(end) <= 0) {
                 count++;
             }
         }
